@@ -5,10 +5,10 @@ class Appointment {
   provider: string
   date: Date
 
-  constructor(provider: string, date: Date) {
+  constructor(data: Omit<Appointment, 'id'>) {
     this.id = uuid()
-    this.provider = provider
-    this.date = date
+    this.provider = data.provider
+    this.date = data.date
   }
 }
 
