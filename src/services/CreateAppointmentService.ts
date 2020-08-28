@@ -5,7 +5,7 @@ import Appointment from '../models/Appointment'
 import AppointmentsRepository from '../repositories/AppointmentsRepository'
 
 interface Request {
-  provider: string
+  provider_id: string
   date: Date
 }
 
@@ -21,7 +21,7 @@ class CreateAppointmentService {
     }
 
     const appointment = repository.create({
-      provider: data.provider,
+      provider_id: data.provider_id,
       date: appointmentDate
     })
 
