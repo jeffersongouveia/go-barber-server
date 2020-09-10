@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm'
 import path from 'path'
 import fs from 'fs'
 
+import AppError from '../errors/AppError'
 import User from '../models/User'
 import avatarConfig from '../config/avatar'
 
@@ -16,7 +17,7 @@ class UpdateAvatarUserService {
 
     const user = await repository.findOne(data.idUser)
     if (!user) {
-      throw new Error('You must sign in to update your avatar')
+      throw new AppError('You must sign in to update your avatar', 401)
     }
 
     // If already exist an avatar we delete it

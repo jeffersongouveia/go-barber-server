@@ -10,39 +10,27 @@ const usersRouter = Router()
 const upload = multer(avatarConfig)
 
 usersRouter.post('/', async (request, response) => {
-  try {
-    const createUser = new CreateUserService()
-    const user = await createUser.execute(request.body)
+  const createUser = new CreateUserService()
+  const user = await createUser.execute(request.body)
 
-    // @ts-ignore
-    delete user.password
+  // @ts-ignore
+  delete user.password
 
-    return response.json(user)
-  } catch (error) {
-    return response.status(400).json({
-      error: error.message,
-    })
-  }
+  return response.json(user)
 })
 
 // @ts-ignore
 usersRouter.patch('/avatar', ensureAuthenticated, upload.single('avatar'), async (request, response) => {
-  try {
-    const updateUserAvatar = new UpdateAvatarUserService()
-    const user = await updateUserAvatar.execute({
-      idUser: request.user.id,
-      fileName: request.file.filename,
-    })
+  const updateUserAvatar = new UpdateAvatarUserService()
+  const user = await updateUserAvatar.execute({
+    idUser: request.user.id,
+    fileName: request.file.filename,
+  })
 
-    // @ts-ignore
-    delete user.password
+  // @ts-ignore
+  delete user.password
 
-    return response.json(user)
-  } catch (error) {
-    return response.status(400).json({
-      error: error.message,
-    })
-  }
+  return response.json(user)
 })
 
 export default usersRouter

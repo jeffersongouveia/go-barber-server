@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm/index'
 import bcrypt from 'bcrypt'
 
 import User from '../models/User'
+import AppError from '../errors/AppError'
 
 interface Request {
   name: string
@@ -20,7 +21,7 @@ class CreateUserService {
     })
 
     if (userExist) {
-      throw Error('E-mail already used')
+      throw new AppError('E-mail already used')
     }
 
     const hashPassword = await bcrypt.hash(data.password, 8)

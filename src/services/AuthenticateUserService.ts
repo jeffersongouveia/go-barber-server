@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm'
 import { compare } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 
+import AppError from '../errors/AppError'
 import User from '../models/User'
 import auth from '../config/auth'
 
@@ -18,7 +19,7 @@ interface Response {
 class AuthenticateUserService {
   public async execute(payload: Request): Promise<Response> {
     const repository = getRepository(User)
-    const error = new Error('Incorrect e-mail/password combination')
+    const error = new AppError('Incorrect e-mail/password combination', 401)
 
     const user = await repository.findOne({
       where: {
