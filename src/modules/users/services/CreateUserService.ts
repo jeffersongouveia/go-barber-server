@@ -1,8 +1,8 @@
-import { getRepository } from 'typeorm/index'
+import { getRepository } from 'typeorm'
 import bcrypt from 'bcrypt'
 
-import User from '../models/User'
-import AppError from '../errors/AppError'
+import User from '../infra/database/entities/User'
+import AppError from '@shared/errors/AppError'
 
 interface Request {
   name: string

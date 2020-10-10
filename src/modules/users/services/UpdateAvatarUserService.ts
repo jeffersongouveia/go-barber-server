@@ -2,9 +2,9 @@ import { getRepository } from 'typeorm'
 import path from 'path'
 import fs from 'fs'
 
-import AppError from '../errors/AppError'
-import User from '../models/User'
-import avatarConfig from '../config/avatar'
+import AppError from '@shared/errors/AppError'
+import User from '../infra/database/entities/User'
+import avatarConfig from '@config/avatar'
 
 interface Request {
   idUser: string
