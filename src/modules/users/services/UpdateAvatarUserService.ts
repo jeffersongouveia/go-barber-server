@@ -1,21 +1,27 @@
-import { getRepository } from 'typeorm'
 import path from 'path'
 import fs from 'fs'
 
-import AppError from '@shared/errors/AppError'
-import User from '../infra/database/entities/User'
 import avatarConfig from '@config/avatar'
 
-interface Request {
+import AppError from '@shared/errors/AppError'
+import User from '@modules/users/infra/database/entities/User'
+
+import IUsersRepository from '@modules/users/repositories/IUsersRepository'
+
+interface IRequest {
   idUser: string
   fileName: string
 }
 
 class UpdateAvatarUserService {
-  public async execute(data: Request): Promise<User> {
-    const repository = getRepository(User)
+  private repository: IUsersRepository
 
-    const user = await repository.findOne(data.idUser)
+  constructor(repository: IUsersRepository) {
+    this.repository = repository
+  }
+
+  public async execute(data: IRequest): Promise<User> {
+    const user = await this.repository.findById(data.idUser)
     if (!user) {
       throw new AppError('You must sign in to update your avatar', 401)
     }
@@ -31,7 +37,7 @@ class UpdateAvatarUserService {
     }
 
     user.avatar = data.fileName
-    await repository.save(user)
+    await this.repository.save(user)
 
     return user
   }
