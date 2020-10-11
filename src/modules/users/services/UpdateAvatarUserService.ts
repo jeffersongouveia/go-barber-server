@@ -1,3 +1,4 @@
+import { inject, injectable } from 'tsyringe'
 import path from 'path'
 import fs from 'fs'
 
@@ -13,10 +14,14 @@ interface IRequest {
   fileName: string
 }
 
+@injectable()
 class UpdateAvatarUserService {
   private repository: IUsersRepository
 
-  constructor(repository: IUsersRepository) {
+  constructor(
+    @inject('UsersRepository')
+    repository: IUsersRepository
+  ) {
     this.repository = repository
   }
 

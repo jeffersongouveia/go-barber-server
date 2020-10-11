@@ -6,6 +6,7 @@ import 'reflect-metadata'
 import routes from './routes'
 
 import '@shared/infra/database'
+import '@shared/container'
 
 import AppError from '@shared/errors/AppError'
 import avatarConfig from '@config/avatar'

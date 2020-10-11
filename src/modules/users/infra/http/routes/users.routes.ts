@@ -1,10 +1,10 @@
 import { Router } from 'express'
+import { container } from 'tsyringe'
 import multer from 'multer'
 
 import avatarConfig from '@config/avatar'
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated'
 
-import UsersRepositories from '@modules/users/infra/database/repositories/UsersRepositories'
 import CreateUserService from '@modules/users/services/CreateUserService'
 import UpdateAvatarUserService from '@modules/users/services/UpdateAvatarUserService'
 
@@ -12,8 +12,7 @@ const usersRouter = Router()
 const upload = multer(avatarConfig)
 
 usersRouter.post('/', async (request, response) => {
-  const usersRepository = new UsersRepositories()
-  const createUser = new CreateUserService(usersRepository)
+  const createUser = container.resolve(CreateUserService)
   const user = await createUser.execute(request.body)
 
   // @ts-ignore
@@ -24,8 +23,7 @@ usersRouter.post('/', async (request, response) => {
 
 // @ts-ignore
 usersRouter.patch('/avatar', ensureAuthenticated, upload.single('avatar'), async (request, response) => {
-  const usersRepository = new UsersRepositories()
-  const updateUserAvatar = new UpdateAvatarUserService(usersRepository)
+  const updateUserAvatar = container.resolve(UpdateAvatarUserService)
   const user = await updateUserAvatar.execute({
     idUser: request.user.id,
     fileName: request.file.filename,

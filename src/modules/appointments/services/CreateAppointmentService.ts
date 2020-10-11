@@ -1,4 +1,5 @@
 import { startOfHour } from 'date-fns'
+import { injectable, inject } from 'tsyringe'
 
 import IAppointmentsRepository from '@modules/appointments/infra/repositories/IAppointmentsRepository'
 
@@ -10,10 +11,14 @@ interface IRequest {
   date: Date
 }
 
+@injectable()
 class CreateAppointmentService {
   private repository: IAppointmentsRepository
 
-  constructor(repository: IAppointmentsRepository) {
+  constructor(
+    @inject('AppointmentsRepository')
+    repository: IAppointmentsRepository
+  ) {
     this.repository = repository
   }
 
@@ -27,7 +32,7 @@ class CreateAppointmentService {
 
     return await this.repository.create({
       provider_id: data.provider_id,
-      date: appointmentDate
+      date: appointmentDate,
     })
   }
 }

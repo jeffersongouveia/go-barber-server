@@ -1,3 +1,4 @@
+import { inject, injectable } from 'tsyringe'
 import bcrypt from 'bcrypt'
 
 import User from '@modules/users/infra/database/entities/User'
@@ -11,10 +12,14 @@ interface IRequest {
   password: string
 }
 
+@injectable()
 class CreateUserService {
   private repository: IUsersRepository
 
-  constructor(repository: IUsersRepository) {
+  constructor(
+    @inject('UsersRepository')
+    repository: IUsersRepository
+  ) {
     this.repository = repository
   }
 

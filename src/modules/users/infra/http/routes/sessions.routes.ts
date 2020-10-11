@@ -1,15 +1,14 @@
 import { Router } from 'express'
+import { container } from 'tsyringe'
 
 import AuthenticateUserService from '@modules/users/services/AuthenticateUserService'
-import UsersRepositories from '@modules/users/infra/database/repositories/UsersRepositories'
 
 const sessionsRouter = Router()
 
 sessionsRouter.post('/', async (request, response) => {
   const { email, password } = request.body
 
-  const usersRepositories = new UsersRepositories()
-  const authUser = new AuthenticateUserService(usersRepositories)
+  const authUser = container.resolve(AuthenticateUserService)
   const { user, token } = await authUser.execute({ email, password })
 
   // @ts-ignore
