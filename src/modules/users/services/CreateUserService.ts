@@ -1,10 +1,10 @@
 import { inject, injectable } from 'tsyringe'
-import bcrypt from 'bcrypt'
 
-import User from '@modules/users/infra/database/entities/User'
 import AppError from '@shared/errors/AppError'
+import User from '@modules/users/infra/database/entities/User'
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository'
+import IHashProvider from '@modules/users/providers/HashProviders/models/IHashProvider'
 
 interface IRequest {
   name: string
@@ -15,12 +15,17 @@ interface IRequest {
 @injectable()
 class CreateUserService {
   private repository: IUsersRepository
+  private hash: IHashProvider
 
   constructor(
     @inject('UsersRepository')
-    repository: IUsersRepository
+    repository: IUsersRepository,
+
+    @inject('HashProvider')
+    hash: IHashProvider
   ) {
     this.repository = repository
+    this.hash = hash
   }
 
   public async execute(data: IRequest): Promise<User> {
@@ -30,7 +35,7 @@ class CreateUserService {
       throw new AppError('E-mail already used')
     }
 
-    const hashPassword = await bcrypt.hash(data.password, 8)
+    const hashPassword = await this.hash.generate(data.password)
 
     return await this.repository.create({
       ...data,

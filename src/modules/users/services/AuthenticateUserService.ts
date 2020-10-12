@@ -1,4 +1,3 @@
-import { compare } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { injectable, inject } from 'tsyringe'
 
@@ -8,6 +7,7 @@ import AppError from '@shared/errors/AppError'
 import User from '@modules/users/infra/database/entities/User'
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository'
+import IHashProvider from '@modules/users/providers/HashProviders/models/IHashProvider'
 
 interface IRequest {
   email: string
@@ -22,12 +22,17 @@ interface IResponse {
 @injectable()
 class AuthenticateUserService {
   private repository: IUsersRepository
+  private hash: IHashProvider
 
   constructor(
     @inject('UsersRepository')
-    repository: IUsersRepository
+    repository: IUsersRepository,
+
+    @inject('HashProvider')
+    hash: IHashProvider
   ) {
     this.repository = repository
+    this.hash = hash
   }
 
   public async execute(payload: IRequest): Promise<IResponse> {
@@ -39,7 +44,7 @@ class AuthenticateUserService {
       throw error
     }
 
-    const passwordsMatch = await compare(payload.password, user.password)
+    const passwordsMatch = await this.hash.compare(payload.password, user.password)
     if (!passwordsMatch) {
       throw error
     }
@@ -49,10 +54,7 @@ class AuthenticateUserService {
       expiresIn: auth.jwt.expiresIn,
     })
 
-    return {
-      user,
-      token,
-    }
+    return { user, token }
   }
 }
 
