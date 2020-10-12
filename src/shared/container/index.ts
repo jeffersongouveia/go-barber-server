@@ -7,6 +7,7 @@ import AppointmentsRepository from '@modules/appointments/infra/database/reposit
 import UsersRepositories from '@modules/users/infra/database/repositories/UsersRepositories'
 
 import '@modules/users/providers'
+import '@shared/container/providers'
 
 container.registerSingleton<IAppointmentsRepository>('AppointmentsRepository', AppointmentsRepository)
 container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepositories)

@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import multer from 'multer'
 
-import avatarConfig from '@config/avatar'
+import avatarConfig from '@config/upload'
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated'
 
 import UsersController from '@modules/users/infra/http/controllers/UsersController'

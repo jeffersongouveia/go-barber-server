@@ -9,14 +9,14 @@ import '@shared/infra/database'
 import '@shared/container'
 
 import AppError from '@shared/errors/AppError'
-import avatarConfig from '@config/avatar'
+import avatarConfig from '@config/upload'
 
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 app.use(routes)
-app.use('/files', express.static(avatarConfig.directory))
+app.use('/files', express.static(avatarConfig.tempFolder))
 
 app.use((error: Error | AppError, request: Request, response: Response, next: NextFunction) => {
   if (error instanceof AppError) {

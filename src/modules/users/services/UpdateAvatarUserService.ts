@@ -1,13 +1,10 @@
 import { inject, injectable } from 'tsyringe'
-import path from 'path'
-import fs from 'fs'
-
-import avatarConfig from '@config/avatar'
 
 import AppError from '@shared/errors/AppError'
 import User from '@modules/users/infra/database/entities/User'
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository'
+import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider'
 
 interface IRequest {
   idUser: string
@@ -17,12 +14,17 @@ interface IRequest {
 @injectable()
 class UpdateAvatarUserService {
   private repository: IUsersRepository
+  private storage: IStorageProvider
 
   constructor(
     @inject('UsersRepository')
-    repository: IUsersRepository
+    repository: IUsersRepository,
+
+    @inject('StorageProvider')
+    storage: IStorageProvider
   ) {
     this.repository = repository
+    this.storage = storage
   }
 
   public async execute(data: IRequest): Promise<User> {
@@ -33,15 +35,10 @@ class UpdateAvatarUserService {
 
     // If already exist an avatar we delete it
     if (user.avatar) {
-      const currentAvatarFilePath = path.join(avatarConfig.directory, user.avatar)
-      const currentAvatarExists = await fs.promises.stat(currentAvatarFilePath)
-
-      if (currentAvatarExists) {
-        await fs.promises.unlink(currentAvatarFilePath)
-      }
+      await this.storage.delete(user.avatar)
     }
 
-    user.avatar = data.fileName
+    user.avatar = await this.storage.save(data.fileName)
     await this.repository.save(user)
 
     return user
