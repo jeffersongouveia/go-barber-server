@@ -38,7 +38,7 @@ describe('UpdateAvatarUser', () => {
     }
     const response = updateUserAvatar.execute(avatarData)
 
-    expect(response).rejects.toBeInstanceOf(AppError)
+    await expect(response).rejects.toBeInstanceOf(AppError)
   })
 
   it('should be able to delete old avatar when uploading a new one', async () => {
