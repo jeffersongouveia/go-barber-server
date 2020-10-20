@@ -14,13 +14,11 @@ class SendForgotPasswordEmailService {
 
   constructor(
     @inject('UsersRepository')
-    repository: IUsersRepository,
-
+      repository: IUsersRepository,
     @inject('MailProvider')
-    mail: IMailProvider,
-
+      mail: IMailProvider,
     @inject('UserTokenRepository')
-    userToken: IUserTokenRepository
+      userToken: IUserTokenRepository,
   ) {
     this.repository = repository
     this.mail = mail
@@ -34,8 +32,8 @@ class SendForgotPasswordEmailService {
       throw new AppError('User not found')
     }
 
-    await this.userToken.generate(user.id)
-    await this.mail.sendMail(email, 'E-mail teste')
+    const { token } = await this.userToken.generate(user.id)
+    await this.mail.sendMail(email, `Pedido de recuperação de senha recebido: ${token}`)
   }
 }
 
