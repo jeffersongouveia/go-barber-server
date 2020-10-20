@@ -6,17 +6,21 @@ import IUserTokenRepository from '@modules/users/repositories/IUserTokenReposito
 class FakeUserTokenRepository implements IUserTokenRepository {
   private usersTokens: UserToken[] = []
 
-  generate(userId: string): Promise<UserToken> {
+  public async generate(userId: string): Promise<UserToken> {
     const userToken = new UserToken()
 
     Object.assign(userToken, {
       id: uuid(),
       token: uuid(),
-      userId,
+      user_id: userId,
     })
 
     this.usersTokens.push(userToken)
     return Promise.resolve(userToken)
+  }
+
+  public async findByToken(token: string): Promise<UserToken | undefined> {
+    return this.usersTokens.find((i) => i.token === token)
   }
 }
 
