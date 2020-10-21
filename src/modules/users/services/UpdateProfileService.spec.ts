@@ -23,7 +23,7 @@ describe('UpdateProfile', () => {
     })
 
     const updateData = {
-      userId: user.id,
+      user_id: user.id,
       name: 'Jeff Gouveia',
       email: 'mr.jeff.gouveia@gmail.com',
     }
@@ -47,7 +47,7 @@ describe('UpdateProfile', () => {
     })
 
     const updateData = {
-      userId: user.id,
+      user_id: user.id,
       name: 'Jeff Gouveia',
       email: 'johndoe@gmail.com',
     }
@@ -63,10 +63,10 @@ describe('UpdateProfile', () => {
     })
 
     const updateData = {
-      userId: user.id,
+      user_id: user.id,
       name: user.name,
       email: user.email,
-      oldPassword: user.password,
+      old_password: user.password,
       password: '890uio',
     }
     const updatedUser = await updateProfile.execute(updateData)
@@ -82,7 +82,7 @@ describe('UpdateProfile', () => {
     })
 
     const updateData = {
-      userId: user.id,
+      user_id: user.id,
       name: user.name,
       email: user.email,
       password: '890uio',
@@ -99,7 +99,7 @@ describe('UpdateProfile', () => {
     })
 
     const updateData = {
-      userId: user.id,
+      user_id: user.id,
       name: user.name,
       email: user.email,
       oldPassword: 'wrong-old-password',
@@ -112,7 +112,7 @@ describe('UpdateProfile', () => {
 
   it('should not be able to update the profile from non-existent user', async () => {
     const response = updateProfile.execute({
-      userId: 'non-existing-id',
+      user_id: 'non-existing-id',
       name: 'Jefferson Gouveia',
       email: 'jeff.gouveia@hotmail.com',
     })
