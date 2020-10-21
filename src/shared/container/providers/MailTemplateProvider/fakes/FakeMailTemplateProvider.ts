@@ -3,7 +3,7 @@ import IParseMailTemplateDTO from '@shared/container/providers/MailTemplateProvi
 
 class FakeMailTemplateProvider implements IMailTemplateProvider {
   public async parse(data: IParseMailTemplateDTO): Promise<string> {
-    return data.template
+    return 'Mail content'
   }
 }
 
