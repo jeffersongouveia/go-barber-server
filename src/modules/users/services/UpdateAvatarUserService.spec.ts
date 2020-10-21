@@ -3,13 +3,19 @@ import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepo
 import FakeStorageProvider from '@shared/container/providers/StorageProvider/fakes/FakeStorageProvider'
 import UpdateAvatarUserService from '@modules/users/services/UpdateAvatarUserService'
 
+let fakeUsersRepository: FakeUsersRepository
+let fakeStorageProvider: FakeStorageProvider
+let updateUserAvatar: UpdateAvatarUserService
+
 describe('UpdateAvatarUser', () => {
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository()
+    fakeStorageProvider = new FakeStorageProvider()
+
+    updateUserAvatar = new UpdateAvatarUserService(fakeUsersRepository, fakeStorageProvider)
+  })
+
   it('should be able to upload a new avatar', async () => {
-    const fakeUsersRepository = new FakeUsersRepository()
-    const fakeStorageProvider = new FakeStorageProvider()
-
-    const updateUserAvatar = new UpdateAvatarUserService(fakeUsersRepository, fakeStorageProvider)
-
     const userData = {
       name: 'Jefferson Gouveia',
       email: 'jeff.gouveia@hotmail.com',
@@ -27,11 +33,6 @@ describe('UpdateAvatarUser', () => {
   })
 
   it('should not be able to upload a new avatar without login', async () => {
-    const fakeUsersRepository = new FakeUsersRepository()
-    const fakeStorageProvider = new FakeStorageProvider()
-
-    const updateUserAvatar = new UpdateAvatarUserService(fakeUsersRepository, fakeStorageProvider)
-
     const avatarData = {
       idUser: 'invalid-id',
       fileName: 'avatar.png'
@@ -42,12 +43,7 @@ describe('UpdateAvatarUser', () => {
   })
 
   it('should be able to delete old avatar when uploading a new one', async () => {
-    const fakeUsersRepository = new FakeUsersRepository()
-    const fakeStorageProvider = new FakeStorageProvider()
-
     const fnDelete = jest.spyOn(fakeStorageProvider, 'delete')
-
-    const updateUserAvatar = new UpdateAvatarUserService(fakeUsersRepository, fakeStorageProvider)
 
     const userData = {
       name: 'Jefferson Gouveia',
