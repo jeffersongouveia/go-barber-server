@@ -33,7 +33,20 @@ class SendForgotPasswordEmailService {
     }
 
     const { token } = await this.userToken.generate(user.id)
-    await this.mail.sendMail(email, `Pedido de recuperação de senha recebido: ${token}`)
+    await this.mail.sendMail({
+      to: {
+        name: user.name,
+        email: user.email,
+      },
+      subject: 'Recuperação de senha',
+      templateData: {
+        template: `Olá {{name}}, seu token é: {{token}}`,
+        variables: {
+          name: user.name,
+          token,
+        }
+      }
+    })
   }
 }
 
