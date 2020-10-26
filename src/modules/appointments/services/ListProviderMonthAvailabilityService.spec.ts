@@ -15,16 +15,18 @@ describe('ListProviderMonthAvailability', () => {
     let response
 
     response = fakeAppointmentsRepository.create({
-      provider_id: 'user-id',
-      date: new Date(2020, 4, 20, 10, 0, 0),
+      provider_id: 'provider-id',
+      user_id: 'user-id',
+      date: new Date(2020, 11, 20, 10, 0, 0),
     })
 
     appointmentsResponses.push(response)
 
     for (let i = 8; i < 18; i++) {
       response = fakeAppointmentsRepository.create({
-        provider_id: 'user-id',
-        date: new Date(2020, 4, 21, i, 0, 0),
+        provider_id: 'provider-id',
+        user_id: 'user-id',
+        date: new Date(2020, 11, 21, i, 0, 0),
       })
 
       appointmentsResponses.push(response)
@@ -35,7 +37,7 @@ describe('ListProviderMonthAvailability', () => {
     const availability = await listProvidersMonthly.execute({
       provider_id: 'user-id',
       year: 2020,
-      month: 5,
+      month: 11,
     })
 
     expect(availability).toEqual(

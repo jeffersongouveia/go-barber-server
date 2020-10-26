@@ -17,6 +17,7 @@ describe('CreateAppointment', () => {
     const appointmentData = {
       date: new Date(),
       provider_id: uuid(),
+      user_id: uuid(),
     }
     const appointment = await createAppointment.execute(appointmentData)
 
@@ -29,6 +30,7 @@ describe('CreateAppointment', () => {
     const appointmentData = {
       date: new Date(),
       provider_id: uuid(),
+      user_id: uuid(),
     }
 
     await createAppointment.execute(appointmentData)

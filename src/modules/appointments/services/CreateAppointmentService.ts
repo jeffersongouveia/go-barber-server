@@ -8,6 +8,7 @@ import AppError from '@shared/errors/AppError'
 
 interface IRequest {
   provider_id: string
+  user_id: string
   date: Date
 }
 
@@ -32,6 +33,7 @@ class CreateAppointmentService {
 
     return await this.repository.create({
       provider_id: data.provider_id,
+      user_id: data.user_id,
       date: appointmentDate,
     })
   }
