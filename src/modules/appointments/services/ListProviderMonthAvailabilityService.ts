@@ -29,11 +29,13 @@ class ListProviderMonthAvailabilityService {
 
   public async execute(data: IRequest): Promise<IResponse> {
     const appointments = await this.repository.findAllInMonthFromProvider(data)
+
     const numberOfDaysInMonth = getDaysInMonth(new Date(data.year, data.month - 1))
     const allDays = Array.from(
       { length: numberOfDaysInMonth },
       (_, index) => index + 1,
     )
+
     const availability = allDays.map(day => {
       const appointmentInDay = appointments.filter((appointment) => getDate(appointment.date) === day)
 
