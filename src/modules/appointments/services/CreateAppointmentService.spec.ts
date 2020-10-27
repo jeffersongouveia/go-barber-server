@@ -1,16 +1,20 @@
 import { v4 as uuid, validate } from 'uuid'
 
 import FakeAppointmentsRepository from '@modules/appointments/infra/repositories/fakes/FakeAppointmentsRepository'
+import FakeNotificationsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository'
 import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentService'
 import AppError from '@shared/errors/AppError'
 
 let fakeAppointmentsRepository: FakeAppointmentsRepository
+let fakeNotificationsRepository: FakeNotificationsRepository
 let createAppointment: CreateAppointmentService
 
 describe('CreateAppointment', () => {
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository()
-    createAppointment = new CreateAppointmentService(fakeAppointmentsRepository)
+    fakeNotificationsRepository = new FakeNotificationsRepository()
+
+    createAppointment = new CreateAppointmentService(fakeAppointmentsRepository, fakeNotificationsRepository)
   })
 
   it('should be able to create a new appointment', async () => {
@@ -74,10 +78,6 @@ describe('CreateAppointment', () => {
   })
 
   it('should not be able to create an appointment out of range 7am - 5pm', async () => {
-    // jest.spyOn(Date, 'now').mockImplementationOnce(() => {
-    //   return new Date(2020, 4, 10, 12).getTime()
-    // })
-
     const firstResponse = createAppointment.execute({
       date: new Date(2020, 4, 10, 7),
       user_id: 'user-id',
