@@ -1,7 +1,10 @@
-import express, { Request, Response, NextFunction } from 'express'
 import 'express-async-errors'
-import cors from 'cors'
 import 'reflect-metadata'
+
+import express, { Request, Response, NextFunction } from 'express'
+import { errors } from 'celebrate'
+
+import cors from 'cors'
 
 import routes from './routes'
 
@@ -16,6 +19,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 app.use(routes)
+app.use(errors())
 app.use('/files', express.static(avatarConfig.tempFolder))
 
 app.use((error: Error | AppError, request: Request, response: Response, next: NextFunction) => {
