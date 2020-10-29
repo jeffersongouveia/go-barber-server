@@ -22,7 +22,7 @@ class ListProviderMonthAvailabilityService {
 
   constructor(
     @inject('AppointmentsRepository')
-      repository: IAppointmentsRepository,
+    repository: IAppointmentsRepository,
   ) {
     this.repository = repository
   }

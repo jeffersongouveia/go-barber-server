@@ -3,7 +3,9 @@ import 'reflect-metadata'
 import { inject, injectable } from 'tsyringe'
 
 import Appointment from '@modules/appointments/infra/database/entities/Appointment'
+
 import IAppointmentsRepository from '@modules/appointments/infra/repositories/IAppointmentsRepository'
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider'
 
 interface IRequest {
   provider_id: string
@@ -15,16 +17,22 @@ interface IRequest {
 @injectable()
 class ListProviderAppointmentService {
   private repository: IAppointmentsRepository
+  private cache: ICacheProvider
 
   constructor(
     @inject('AppointmentsRepository')
-    repository: IAppointmentsRepository
+    repository: IAppointmentsRepository,
+
+    @inject('CacheProvider')
+    cache: ICacheProvider
   ) {
     this.repository = repository
+    this.cache = cache
   }
 
   public async execute(data: IRequest): Promise<Appointment[]> {
-    return await this.repository.findAllInDayFromProvider(data)
+    const appointments = await this.repository.findAllInDayFromProvider(data)
+    return appointments
   }
 }
 

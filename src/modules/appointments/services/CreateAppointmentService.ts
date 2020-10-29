@@ -20,9 +20,10 @@ class CreateAppointmentService {
 
   constructor(
     @inject('AppointmentsRepository')
-      appointmentsRepository: IAppointmentsRepository,
+    appointmentsRepository: IAppointmentsRepository,
+
     @inject('NotificationsRepository')
-      notificationsRepository: INotificationsRepository,
+    notificationsRepository: INotificationsRepository,
   ) {
     this.appointmentsRepository = appointmentsRepository
     this.notificationsRepository = notificationsRepository
