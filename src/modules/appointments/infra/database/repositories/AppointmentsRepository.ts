@@ -1,5 +1,4 @@
 import { getRepository, Raw, Repository } from 'typeorm'
-import { classToClass } from 'class-transformer'
 
 import Appointment from '@modules/appointments/infra/database/entities/Appointment'
 
@@ -55,7 +54,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
       relations: ['user'],
     })
 
-    return classToClass(appointments)
+    return appointments
   }
 }
 

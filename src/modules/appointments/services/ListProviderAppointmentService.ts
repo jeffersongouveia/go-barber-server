@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 
 import { inject, injectable } from 'tsyringe'
+import { classToClass } from 'class-transformer'
 
 import Appointment from '@modules/appointments/infra/database/entities/Appointment'
 
@@ -39,7 +40,7 @@ class ListProviderAppointmentService {
 
     if (!appointments) {
       appointments = await this.repository.findAllInDayFromProvider(data)
-      await this.cache.save(cacheKey, appointments)
+      await this.cache.save(cacheKey, classToClass(appointments))
     }
 
     return appointments
