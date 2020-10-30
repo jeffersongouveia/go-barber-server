@@ -1,4 +1,5 @@
 import { getRepository, Raw, Repository } from 'typeorm'
+import { classToClass } from 'class-transformer'
 
 import Appointment from '@modules/appointments/infra/database/entities/Appointment'
 
@@ -32,24 +33,29 @@ class AppointmentsRepository implements IAppointmentsRepository {
   public async findAllInMonthFromProvider(data: IFindAllInMonthFromProviderDTO): Promise<Appointment[]> {
     const parsedMonth = String(data.month).padStart(2, '0')
 
-    return await this.ormRepository.find({
+    const appointments = await this.ormRepository.find({
       where: {
         provider_id: data.provider_id,
         date: Raw((field) => `to_char(${field}, 'MM-YYYY') = '${parsedMonth}-${data.year}'`)
       }
     })
+
+    return appointments
   }
 
   public async findAllInDayFromProvider(data: IFindAllInDayFromProviderDTO): Promise<Appointment[]> {
     const parsedDay = String(data.day).padStart(2, '0')
     const parsedMonth = String(data.month).padStart(2, '0')
 
-    return await this.ormRepository.find({
+    const appointments = await this.ormRepository.find({
       where: {
         provider_id: data.provider_id,
         date: Raw((field) => `to_char(${field}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${data.year}'`)
-      }
+      },
+      relations: ['user'],
     })
+
+    return classToClass(appointments)
   }
 }
 
