@@ -5,6 +5,7 @@ import User from '@modules/users/infra/database/entities/User'
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository'
 import IHashProvider from '@modules/users/providers/HashProviders/models/IHashProvider'
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider'
 
 interface IRequest {
   name: string
@@ -16,16 +17,21 @@ interface IRequest {
 class CreateUserService {
   private repository: IUsersRepository
   private hash: IHashProvider
+  private cache: ICacheProvider
 
   constructor(
     @inject('UsersRepository')
     repository: IUsersRepository,
 
     @inject('HashProvider')
-    hash: IHashProvider
+    hash: IHashProvider,
+
+    @inject('CacheProvider')
+    cache: ICacheProvider
   ) {
     this.repository = repository
     this.hash = hash
+    this.cache = cache
   }
 
   public async execute(data: IRequest): Promise<User> {
@@ -36,11 +42,14 @@ class CreateUserService {
     }
 
     const hashPassword = await this.hash.generate(data.password)
-
-    return await this.repository.create({
+    const user = await this.repository.create({
       ...data,
       password: hashPassword,
     })
+
+    await this.cache.invalidatePrefix('providers-list')
+
+    return user
   }
 }
 

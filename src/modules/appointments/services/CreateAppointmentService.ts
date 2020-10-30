@@ -6,6 +6,7 @@ import AppError from '@shared/errors/AppError'
 
 import IAppointmentsRepository from '@modules/appointments/infra/repositories/IAppointmentsRepository'
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository'
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider'
 
 interface IRequest {
   provider_id: string
@@ -17,6 +18,7 @@ interface IRequest {
 class CreateAppointmentService {
   private appointmentsRepository: IAppointmentsRepository
   private notificationsRepository: INotificationsRepository
+  private cache: ICacheProvider
 
   constructor(
     @inject('AppointmentsRepository')
@@ -24,9 +26,13 @@ class CreateAppointmentService {
 
     @inject('NotificationsRepository')
     notificationsRepository: INotificationsRepository,
+
+    @inject('CacheProvider')
+    cache: ICacheProvider
   ) {
     this.appointmentsRepository = appointmentsRepository
     this.notificationsRepository = notificationsRepository
+    this.cache = cache
   }
 
   public async execute(data: IRequest): Promise<Appointment> {
@@ -55,6 +61,9 @@ class CreateAppointmentService {
       user_id: data.user_id,
       date: appointmentDate,
     })
+
+    const cacheKey = `provider-appointments:${data.provider_id}:${format(data.date, 'yyyy-mm-dd')}`
+    await this.cache.invalidate(cacheKey)
 
     const dateFormatted = format(data.date, "dd 'de' MMM. yyyy 'às' HH:mm")
     await this.notificationsRepository.create({
