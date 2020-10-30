@@ -1,7 +1,9 @@
+import 'reflect-metadata'
+
 import { sign } from 'jsonwebtoken'
 import { injectable, inject } from 'tsyringe'
 
-import auth from '@config/auth'
+import authConfig from '@config/auth'
 
 import AppError from '@shared/errors/AppError'
 import User from '@modules/users/infra/database/entities/User'
@@ -49,9 +51,9 @@ class AuthenticateUserService {
       throw error
     }
 
-    const token = sign({}, auth.jwt.secret, {
+    const token = sign({}, authConfig.jwt.secret, {
       subject: user.id,
-      expiresIn: auth.jwt.expiresIn,
+      expiresIn: authConfig.jwt.expiresIn,
     })
 
     return { user, token }

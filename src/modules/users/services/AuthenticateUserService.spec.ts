@@ -1,12 +1,10 @@
+import AppError from '@shared/errors/AppError'
+import AuthenticateUserService from '@modules/users/services/AuthenticateUserService'
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository'
 import FakeHashProvider from '@modules/users/providers/HashProviders/fakes/FakeHashProvider'
-import CreateUserService from '@modules/users/services/CreateUserService'
-import AuthenticateUserService from '@modules/users/services/AuthenticateUserService'
-import AppError from '@shared/errors/AppError'
 
 let fakeUsersRepository: FakeUsersRepository
 let fakeHashProvider: FakeHashProvider
-let createUser: CreateUserService
 let authenticateUser: AuthenticateUserService
 
 describe('AuthenticateUser', () => {
@@ -14,7 +12,6 @@ describe('AuthenticateUser', () => {
     fakeUsersRepository = new FakeUsersRepository()
     fakeHashProvider = new FakeHashProvider()
 
-    createUser = new CreateUserService(fakeUsersRepository, fakeHashProvider)
     authenticateUser = new AuthenticateUserService(fakeUsersRepository, fakeHashProvider)
   })
 
@@ -25,7 +22,7 @@ describe('AuthenticateUser', () => {
       password: '*123$qwE'
     }
 
-    const user = await createUser.execute(userData)
+    const user = await fakeUsersRepository.create(userData)
     const responseAuth = await authenticateUser.execute(userData)
 
     expect(responseAuth).toHaveProperty('token')
@@ -39,7 +36,7 @@ describe('AuthenticateUser', () => {
       password: '*123$qwE'
     }
 
-    await createUser.execute(userData)
+    await fakeUsersRepository.create(userData)
     const responseAuth = authenticateUser.execute({ ...userData, password: '123$qwe' })
 
     await expect(responseAuth).rejects.toBeInstanceOf(AppError)

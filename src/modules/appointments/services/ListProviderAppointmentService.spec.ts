@@ -1,13 +1,20 @@
 import ListProviderAppointmentService from './ListProviderAppointmentService'
 import FakeAppointmentsRepository from '../infra/repositories/fakes/FakeAppointmentsRepository'
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider'
 
 let fakeAppointmentsRepository: FakeAppointmentsRepository
+let fakeCacheProvider: FakeCacheProvider
 let listProviderAppointment: ListProviderAppointmentService
 
 describe('ListProviderAppointment', () => {
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository()
-    listProviderAppointment = new ListProviderAppointmentService(fakeAppointmentsRepository)
+    fakeCacheProvider = new FakeCacheProvider()
+
+    listProviderAppointment = new ListProviderAppointmentService(
+      fakeAppointmentsRepository,
+      fakeCacheProvider,
+    )
   })
 
   it('should be able to list the appointments of a provider', async () => {

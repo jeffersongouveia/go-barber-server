@@ -1,20 +1,28 @@
+import 'reflect-metadata'
 import { v4 as uuid, validate } from 'uuid'
 
+import AppError from '@shared/errors/AppError'
+import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentService'
 import FakeAppointmentsRepository from '@modules/appointments/infra/repositories/fakes/FakeAppointmentsRepository'
 import FakeNotificationsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository'
-import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentService'
-import AppError from '@shared/errors/AppError'
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider'
 
 let fakeAppointmentsRepository: FakeAppointmentsRepository
 let fakeNotificationsRepository: FakeNotificationsRepository
+let fakeCacheProvider: FakeCacheProvider
 let createAppointment: CreateAppointmentService
 
 describe('CreateAppointment', () => {
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository()
     fakeNotificationsRepository = new FakeNotificationsRepository()
+    fakeCacheProvider = new FakeCacheProvider()
 
-    createAppointment = new CreateAppointmentService(fakeAppointmentsRepository, fakeNotificationsRepository)
+    createAppointment = new CreateAppointmentService(
+      fakeAppointmentsRepository,
+      fakeNotificationsRepository,
+      fakeCacheProvider,
+    )
   })
 
   it('should be able to create a new appointment', async () => {
