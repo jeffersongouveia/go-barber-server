@@ -8,6 +8,7 @@ import { errors } from 'celebrate'
 import cors from 'cors'
 
 import routes from './routes'
+import rateLimiter from '@shared/infra/http/middlewares/rateLimiter'
 
 import '@shared/infra/database'
 import '@shared/container'
@@ -19,6 +20,7 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
+app.use(rateLimiter)
 app.use(routes)
 app.use(errors())
 app.use('/files', express.static(avatarConfig.tempFolder))
