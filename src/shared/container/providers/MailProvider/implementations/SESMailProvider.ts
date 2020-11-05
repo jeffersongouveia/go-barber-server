@@ -1,12 +1,15 @@
 import nodemailer, { Transporter } from 'nodemailer'
 import { injectable, inject } from 'tsyringe'
+import aws from 'aws-sdk'
+
+import mailConfig from '@config/mail'
 
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider'
 import ISendMailDTO from '@shared/container/providers/MailProvider/dtos/ISendMailDTO'
 import IMailTemplateProvider from '@shared/container/providers/MailTemplateProvider/models/IMailTemplateProvider'
 
 @injectable()
-class EtherealMailProvider implements IMailProvider {
+class SESMailProvider implements IMailProvider {
   private client: Transporter
   private mailTemplateProvider: IMailTemplateProvider
 
@@ -16,25 +19,21 @@ class EtherealMailProvider implements IMailProvider {
   ) {
     this.mailTemplateProvider = mailTemplateProvider
 
-    nodemailer.createTestAccount()
-      .then((account) => {
-        this.client = nodemailer.createTransport({
-          host: account.smtp.host,
-          port: account.smtp.port,
-          secure: account.smtp.secure,
-          auth: {
-            user: account.user,
-            pass: account.pass,
-          }
-        })
+    this.client = nodemailer.createTransport({
+      SES: new aws.SES({
+        apiVersion: '2010-12-01',
+        region: process.env.AWS_DEFAULT_REGION,
       })
+    })
   }
 
   public async sendMail(data: ISendMailDTO): Promise<void> {
-    const message = await this.client.sendMail({
+    const defaults = mailConfig.defaults
+
+    await this.client.sendMail({
       from: {
-        name: data.from?.name || 'Equipe GoBarber',
-        address: data.from?.email || 'equipe@gobarber.com.br',
+        address: data.from?.email || defaults.from.email,
+        name: data.from?.name || defaults.from.name,
       },
       to: {
         name: data.to.name,
@@ -43,10 +42,7 @@ class EtherealMailProvider implements IMailProvider {
       subject: data.subject,
       html: await this.mailTemplateProvider.parse(data.templateData),
     })
-
-    console.log(`Message sent: ${message.messageId}`)
-    console.log(`Preview URL: ${nodemailer.getTestMessageUrl(message)}`)
   }
 }
 
-export default EtherealMailProvider
+export default SESMailProvider
