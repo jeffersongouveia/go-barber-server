@@ -10,8 +10,8 @@ interface IRequest {
   user_id: string
   name: string
   email: string
-  old_password?: string
-  password?: string
+  current_password?: string
+  new_password?: string
 }
 
 @injectable()
@@ -45,17 +45,17 @@ class UpdateProfileService {
     user.name = data.name
     user.email = data.email
 
-    if (data.password && !data.old_password) {
+    if (data.new_password && !data.current_password) {
       throw new AppError('You need inform the old password to set a new one')
     }
 
-    if (data.password && data.old_password) {
-      const oldPasswordMatch = await this.hash.compare(data.old_password, user.password)
+    if (data.new_password && data.current_password) {
+      const oldPasswordMatch = await this.hash.compare(data.current_password, user.password)
       if (!oldPasswordMatch) {
         throw new AppError('Wrong old password')
       }
 
-      user.password = await this.hash.generate(data.password)
+      user.password = await this.hash.generate(data.new_password)
     }
 
     return this.repository.save(user)

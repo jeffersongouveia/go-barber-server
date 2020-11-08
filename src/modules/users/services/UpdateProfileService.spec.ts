@@ -66,12 +66,12 @@ describe('UpdateProfile', () => {
       user_id: user.id,
       name: user.name,
       email: user.email,
-      old_password: user.password,
-      password: '890uio',
+      current_password: user.password,
+      new_password: '890uio',
     }
     const updatedUser = await updateProfile.execute(updateData)
 
-    expect(updatedUser.password).toBe(updateData.password)
+    expect(updatedUser.password).toBe(updateData.new_password)
   })
 
   it('should not be able to update the password without the old password', async () => {
@@ -85,7 +85,7 @@ describe('UpdateProfile', () => {
       user_id: user.id,
       name: user.name,
       email: user.email,
-      password: '890uio',
+      new_password: '890uio',
     }
     const response = updateProfile.execute(updateData)
     await expect(response).rejects.toBeInstanceOf(AppError)
@@ -102,8 +102,8 @@ describe('UpdateProfile', () => {
       user_id: user.id,
       name: user.name,
       email: user.email,
-      oldPassword: 'wrong-old-password',
-      password: '890uio',
+      current_password: 'wrong-current-password',
+      new_password: '890uio',
     }
 
     const response = updateProfile.execute(updateData)
