@@ -15,7 +15,10 @@ class ProfileController {
 
   public async update(request: Request, response: Response): Promise<Response> {
     const updateProfile = container.resolve(UpdateProfileService)
-    const user = await updateProfile.execute(request.body)
+    const user = await updateProfile.execute({
+      ...request.body,
+      user_id: request.user.id,
+    })
 
     return response.json(classToClass(user))
   }
