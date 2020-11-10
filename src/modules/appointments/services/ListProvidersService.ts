@@ -1,4 +1,5 @@
 import { inject, injectable } from 'tsyringe'
+import { classToClass } from 'class-transformer'
 
 import User from '@modules/users/infra/database/entities/User'
 
@@ -26,7 +27,7 @@ class ListProvidersService {
 
     if (!users) {
       users = await this.repository.findAllProviders(exceptionUserID)
-      await this.cache.save(`providers-list:${exceptionUserID}`, users)
+      await this.cache.save(`providers-list:${exceptionUserID}`, classToClass(users))
     }
 
     return users
