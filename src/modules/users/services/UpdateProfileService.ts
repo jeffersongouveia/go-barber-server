@@ -10,6 +10,7 @@ interface IRequest {
   user_id: string
   name: string
   email: string
+  is_hairstyle?: boolean
   current_password?: string
   new_password?: string
 }
@@ -42,9 +43,6 @@ class UpdateProfileService {
       throw new AppError('This e-mail is already in use')
     }
 
-    user.name = data.name
-    user.email = data.email
-
     if (data.new_password && !data.current_password) {
       throw new AppError('You need inform the old password to set a new one')
     }
@@ -57,6 +55,13 @@ class UpdateProfileService {
 
       user.password = await this.hash.generate(data.new_password)
     }
+
+    if (data.is_hairstyle !== undefined) {
+      user.is_hairstyle = data.is_hairstyle
+    }
+
+    user.name = data.name
+    user.email = data.email
 
     return this.repository.save(user)
   }

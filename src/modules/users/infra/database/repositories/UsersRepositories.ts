@@ -26,6 +26,7 @@ class UsersRepositories implements IUsersRepository {
       return await this.repository.find({
         where: {
           id: Not(exceptionId),
+          is_hairstyle: true,
         },
       })
     }
