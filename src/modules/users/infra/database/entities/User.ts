@@ -21,6 +21,9 @@ class User {
   @Column()
   avatar: string
 
+  @Column()
+  is_hairstyle: boolean
+
   @Expose({ name: 'avatar_url' })
   getAvatarUrl(): string | null {
     if (!this.avatar) {
