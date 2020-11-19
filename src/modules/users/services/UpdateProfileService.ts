@@ -10,7 +10,7 @@ interface IRequest {
   user_id: string
   name: string
   email: string
-  is_hairstyle?: boolean
+  is_hairstylist?: boolean
   current_password?: string
   new_password?: string
 }
@@ -56,8 +56,8 @@ class UpdateProfileService {
       user.password = await this.hash.generate(data.new_password)
     }
 
-    if (data.is_hairstyle !== undefined) {
-      user.is_hairstyle = data.is_hairstyle
+    if (data.is_hairstylist !== undefined) {
+      user.is_hairstylist = data.is_hairstylist
     }
 
     user.name = data.name

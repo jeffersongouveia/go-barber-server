@@ -22,7 +22,7 @@ class User {
   avatar: string
 
   @Column()
-  is_hairstyle: boolean
+  is_hairstylist: boolean
 
   @Expose({ name: 'avatar_url' })
   getAvatarUrl(): string | null {
