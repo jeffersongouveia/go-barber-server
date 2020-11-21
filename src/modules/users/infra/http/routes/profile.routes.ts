@@ -3,9 +3,11 @@ import { celebrate, Segments, Joi } from 'celebrate'
 
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated'
 import ProfileController from '@modules/users/infra/http/controllers/ProfileController'
+import HairStylistController from '@modules/users/infra/http/controllers/HairStylistController'
 
 const profileRouter = Router()
 const profileController = new ProfileController()
+const hairStylistController = new HairStylistController()
 
 profileRouter.use(ensureAuthenticated)
 
@@ -24,6 +26,18 @@ profileRouter.put(
     },
   }),
   profileController.update,
+)
+
+profileRouter.post(
+  '/hairstylist',
+  celebrate({
+    [Segments.BODY]: {
+      hour_start: Joi.string().required(),
+      hour_stop: Joi.string().required(),
+      days_available: Joi.array().min(1).max(7).required(),
+    },
+  }),
+  hairStylistController.update,
 )
 
 export default profileRouter
