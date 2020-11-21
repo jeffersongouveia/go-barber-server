@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Transform } from 'class-transformer'
 
 @Entity('hairstylists')
 class HairStylist {
@@ -9,9 +10,11 @@ class HairStylist {
   user_id: string
 
   @Column()
+  @Transform((value) => value.slice(0, -3)) // Remove the seconds
   hour_start: string
 
   @Column()
+  @Transform((value) => value.slice(0, -3)) // Remove the seconds
   hour_stop: string
 
   @Column()

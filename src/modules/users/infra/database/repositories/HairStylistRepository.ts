@@ -12,6 +12,14 @@ class HairStylistRepository implements IHairStylistRepository {
     this.repository = getRepository(HairStylist)
   }
 
+  async findById(userId: string): Promise<HairStylist | undefined> {
+    const profile = await this.repository.findOne({
+      where: { user_id: userId },
+    })
+
+    return profile
+  }
+
   async update(data: IUpdateHairStylistProfile): Promise<HairStylist> {
     let hairStylistProfile = await this.repository.findOne({
       where: { user_id: data.user_id },

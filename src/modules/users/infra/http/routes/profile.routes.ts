@@ -28,6 +28,8 @@ profileRouter.put(
   profileController.update,
 )
 
+profileRouter.get('/hairstylist', hairStylistController.index)
+
 profileRouter.post(
   '/hairstylist',
   celebrate({
