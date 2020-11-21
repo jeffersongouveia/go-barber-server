@@ -1,8 +1,8 @@
 import HairStylist from '@modules/users/infra/database/entities/HairStylist'
 
-import IUpdateHairStylistProfile from '@modules/users/dtos/IUpdateHairStylistProfile'
+import IHairStylistProfile from '@modules/users/dtos/IHairStylistProfile'
 
 export default interface IHairStylistRepository {
   findById(userId: string): Promise<HairStylist | undefined>
-  update(data: IUpdateHairStylistProfile): Promise<HairStylist>
+  update(data: IHairStylistProfile): Promise<HairStylist>
 }

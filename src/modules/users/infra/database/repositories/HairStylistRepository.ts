@@ -3,7 +3,7 @@ import { getRepository, Repository } from 'typeorm'
 import HairStylist from '@modules/users/infra/database/entities/HairStylist'
 
 import IHairStylistRepository from '@modules/users/repositories/IHairStylistRepository'
-import IUpdateHairStylistProfile from '@modules/users/dtos/IUpdateHairStylistProfile'
+import IHairStylistProfile from '@modules/users/dtos/IHairStylistProfile'
 
 class HairStylistRepository implements IHairStylistRepository {
   private repository: Repository<HairStylist>
@@ -20,7 +20,7 @@ class HairStylistRepository implements IHairStylistRepository {
     return profile
   }
 
-  async update(data: IUpdateHairStylistProfile): Promise<HairStylist> {
+  async update(data: IHairStylistProfile): Promise<HairStylist> {
     let hairStylistProfile = await this.repository.findOne({
       where: { user_id: data.user_id },
     })

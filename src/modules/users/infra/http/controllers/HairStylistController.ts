@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { container } from 'tsyringe'
-import { classToClass } from 'class-transformer'
 
 import ShowHairStylistProfile from '@modules/users/services/ShowHairStylistProfile'
 import UpdateHairStylistProfile from '@modules/users/services/UpdateHairStylistProfile'
@@ -10,7 +9,7 @@ class HairStylistController {
     const showProfile = container.resolve(ShowHairStylistProfile)
     const hairStylistProfile = await showProfile.execute(request.user.id)
 
-    return response.json(classToClass(hairStylistProfile))
+    return response.json(hairStylistProfile)
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
