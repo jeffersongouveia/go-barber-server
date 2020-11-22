@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
-import { Transform, Exclude } from 'class-transformer'
+import { Transform} from 'class-transformer'
 
 @Entity('hairstylists')
 class HairStylist {

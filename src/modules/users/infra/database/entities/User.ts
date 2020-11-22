@@ -1,7 +1,11 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
-import { Exclude, Expose } from 'class-transformer'
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { classToClass, Exclude, Expose } from 'class-transformer'
 
 import uploadConfig from '@config/upload'
+import HairStylist from '@modules/users/infra/database/entities/HairStylist'
+
+import IHairStylistProfile from '@modules/users/dtos/IHairStylistProfile'
+import Omit = jest.Omit
 
 @Entity('users')
 class User {
@@ -14,8 +18,8 @@ class User {
   @Column()
   email: string
 
-  @Column()
   @Exclude()
+  @Column()
   password: string
 
   @Column()
@@ -23,6 +27,11 @@ class User {
 
   @Column()
   is_hairstylist: boolean
+
+  @Exclude()
+  @OneToOne(() => HairStylist)
+  @JoinColumn({ name: 'id', referencedColumnName: 'user_id' })
+  hairstylist: HairStylist
 
   @Expose({ name: 'avatar_url' })
   getAvatarUrl(): string | null {
@@ -38,6 +47,28 @@ class User {
       default:
         return null
     }
+  }
+
+  @Expose({ name: 'hairstylist_profile' })
+  getHairstylistProfile(): Omit<IHairStylistProfile, 'user_id'> | string {
+    const hairstylist = classToClass(this.hairstylist)
+
+    const profile: Omit<IHairStylistProfile, 'user_id'> = {
+      hour_start: hairstylist.hour_start,
+      hour_stop: hairstylist.hour_stop,
+      days_available: [],
+    }
+
+    const keysWorksDays = Object.keys(hairstylist).filter((key) => key.startsWith('works_'))
+    keysWorksDays.forEach((key) => {
+      // @ts-ignore
+      if (hairstylist[key]) {
+        const dayAvailable = key.replace('works_', '')
+        profile.days_available.push(dayAvailable)
+      }
+    })
+
+    return profile
   }
 
   @CreateDateColumn()

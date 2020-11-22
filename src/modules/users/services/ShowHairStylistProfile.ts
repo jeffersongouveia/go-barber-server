@@ -1,4 +1,5 @@
 import { inject, injectable } from 'tsyringe'
+import { classToClass } from 'class-transformer'
 
 import AppError from '@shared/errors/AppError'
 
@@ -17,19 +18,18 @@ class ShowHairStylistProfile {
   }
 
   public async execute(userId: string): Promise<IHairStylistProfile> {
-    const hairStylist = await this.repository.findById(userId)
+    let hairStylist = await this.repository.findById(userId)
 
     if (!hairStylist) {
       throw new AppError('This user haven\'t a hair stylist profile')
     }
 
+    hairStylist = classToClass(hairStylist)
+
     const profile: IHairStylistProfile = {
       user_id: hairStylist.user_id,
-
-      // Here we remove the seconds, we don't need them
-      hour_start: hairStylist.hour_start.slice(0, -3),
-      hour_stop: hairStylist.hour_stop.slice(0, -3),
-
+      hour_start: hairStylist.hour_start,
+      hour_stop: hairStylist.hour_stop,
       days_available: [],
     }
 

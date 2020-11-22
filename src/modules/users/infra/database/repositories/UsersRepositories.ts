@@ -28,6 +28,7 @@ class UsersRepositories implements IUsersRepository {
           id: Not(exceptionId),
           is_hairstylist: true,
         },
+        relations: ['hairstylist'],
       })
     }
 
