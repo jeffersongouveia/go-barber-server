@@ -36,10 +36,18 @@ class ListProviderAppointmentService {
     const dayWithZero = data.day.toString().padStart(2, '0')
     const cacheKey = `provider-appointments:${data.provider_id}:${data.year}-${monthWithZero}-${dayWithZero}`
 
-    let appointments = await this.cache.recover<Appointment[]>(cacheKey)
+    const isCacheEnabled = process.env.APP_CACHE_DISABLED === 'false'
+    let appointments: Appointment[] | null = null
+
+    if (isCacheEnabled) {
+      appointments = await this.cache.recover<Appointment[]>(cacheKey)
+    }
 
     if (!appointments) {
       appointments = await this.repository.findAllInDayFromProvider(data)
+    }
+
+    if (isCacheEnabled) {
       await this.cache.save(cacheKey, classToClass(appointments))
     }
 

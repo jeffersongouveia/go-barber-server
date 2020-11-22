@@ -50,7 +50,11 @@ class User {
   }
 
   @Expose({ name: 'hairstylist_profile' })
-  getHairstylistProfile(): Omit<IHairStylistProfile, 'user_id'> | string {
+  getHairstylistProfile(): Omit<IHairStylistProfile, 'user_id'> | undefined {
+    if (!this.hairstylist) {
+      return undefined
+    }
+
     const hairstylist = classToClass(this.hairstylist)
 
     const profile: Omit<IHairStylistProfile, 'user_id'> = {

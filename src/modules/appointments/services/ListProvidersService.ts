@@ -23,10 +23,18 @@ class ListProvidersService {
   }
 
   public async execute(exceptionUserID: string): Promise<User[]> {
-    let users = await this.cache.recover<User[]>(exceptionUserID)
+    const isCacheEnabled = process.env.APP_CACHE_DISABLED === 'false'
+    let users: User[] | null = null
+
+    if (isCacheEnabled) {
+      users = await this.cache.recover<User[]>(exceptionUserID)
+    }
 
     if (!users) {
       users = await this.repository.findAllProviders(exceptionUserID)
+    }
+
+    if (isCacheEnabled) {
       await this.cache.save(`providers-list:${exceptionUserID}`, classToClass(users))
     }
 
